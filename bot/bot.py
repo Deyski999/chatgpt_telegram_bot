@@ -786,8 +786,12 @@ async def edited_message_handle(update: Update, context: CallbackContext):
         await update.edited_message.reply_text(text, parse_mode=ParseMode.HTML)
 
 
-async def error_handle(update: Update, context: CallbackContext) -> None:
-    logger.error(msg="Exception while handling an update:", exc_info=context.error)
+async def error_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        if update and update.effective_chat:
+            await context.bot.send_message(update.effective_chat.id, "Something went wrong.")
+    except Exception as e:
+        print(f"Error while handling error: {e}")
 
     try:
         # collect error message
