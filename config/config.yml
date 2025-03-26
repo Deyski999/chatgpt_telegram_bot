@@ -2,3 +2,4 @@ telegram_token: ${TELEGRAM_TOKEN}
 openai_api_key: ${OPENAI_API_KEY}
 allowed_telegram_usernames:
   - Deyski999
+new_dialog_timeout: 600  # seconds (10 minutes)
