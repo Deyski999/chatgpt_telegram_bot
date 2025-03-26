@@ -1,35 +1,69 @@
-import yaml
-import dotenv
-from pathlib import Path
+import os
 
-config_dir = Path(__file__).parent.parent.resolve() / "config"
+telegram_token = os.getenv("TELEGRAM_TOKEN")
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# load yaml config
-with open(config_dir / "config.yml", 'r') as f:
-    config_yaml = yaml.safe_load(f)
+# Dialog timeout (in seconds)
+new_dialog_timeout = 600
 
-# load .env config
-config_env = dotenv.dotenv_values(config_dir / "config.env")
+# Supported chat modes
+chat_modes = {
+    "assistant": {
+        "name": "💬 Assistant",
+        "welcome_message": "How can I help you today?",
+        "parse_mode": "html"
+    },
+    "artist": {
+        "name": "👩‍🎨 Artist",
+        "welcome_message": "Send me a prompt and I will draw something!",
+        "parse_mode": "html"
+    },
+}
 
-# config parameters
-telegram_token = "7738161946:AAGUdgUDLFucQebMsCQih_7k47wz24fc4CY"
-openai_api_key = config_yaml["openai_api_key"]
-openai_api_base = config_yaml.get("openai_api_base", None)
-allowed_telegram_usernames = config_yaml["allowed_telegram_usernames"]
-new_dialog_timeout = config_yaml["new_dialog_timeout"]
-enable_message_streaming = config_yaml.get("enable_message_streaming", True)
-return_n_generated_images = config_yaml.get("return_n_generated_images", 1)
-image_size = config_yaml.get("image_size", "512x512")
-n_chat_modes_per_page = config_yaml.get("n_chat_modes_per_page", 5)
-mongodb_uri = "mongodb+srv://ghaithalrahi:Searchersof99!@deyski999.j1l0sp5.mongodb.net/?retryWrites=true&w=majority&appName=Deyski999"
+n_chat_modes_per_page = 5
 
-# chat_modes
-with open(config_dir / "chat_modes.yml", 'r') as f:
-    chat_modes = yaml.safe_load(f)
+# Supported models
+models = {
+    "available_text_models": ["gpt-3.5-turbo", "gpt-4-vision-preview", "gpt-4o"],
+    "info": {
+        "gpt-3.5-turbo": {
+            "name": "GPT-3.5",
+            "description": "Fast and cost-effective. Best for general tasks.",
+            "price_per_1000_input_tokens": 0.0015,
+            "price_per_1000_output_tokens": 0.002,
+            "scores": {"Speed": 5, "Logic": 3, "Creativity": 3}
+        },
+        "gpt-4-vision-preview": {
+            "name": "GPT-4 Vision",
+            "description": "Advanced reasoning and image understanding.",
+            "price_per_1000_input_tokens": 0.01,
+            "price_per_1000_output_tokens": 0.03,
+            "scores": {"Speed": 3, "Logic": 5, "Creativity": 5}
+        },
+        "gpt-4o": {
+            "name": "GPT-4 Omni",
+            "description": "Faster and cheaper GPT-4 with image support.",
+            "price_per_1000_input_tokens": 0.005,
+            "price_per_1000_output_tokens": 0.015,
+            "scores": {"Speed": 4, "Logic": 5, "Creativity": 5}
+        },
+        "dalle-2": {
+            "price_per_1_image": 0.02
+        },
+        "whisper": {
+            "price_per_1_min": 0.006
+        },
+    }
+}
 
-# models
-with open(config_dir / "models.yml", 'r') as f:
-    models = yaml.safe_load(f)
+# Default image generation settings
+image_size = "1024x1024"
+return_n_generated_images = 1
 
-# files
-help_group_chat_video_path = Path(__file__).parent.parent.resolve() / "static" / "help_group_chat.mp4"
+# Access control
+allowed_telegram_usernames = []  # leave empty to allow everyone
+
+enable_message_streaming = False
+
+# Static content path
+help_group_chat_video_path = "static/help_group_chat.mp4"
