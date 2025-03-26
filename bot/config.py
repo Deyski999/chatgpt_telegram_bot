@@ -67,3 +67,8 @@ enable_message_streaming = False
 
 # Static content path
 help_group_chat_video_path = "static/help_group_chat.mp4"
+
+# config.py
+
+mongodb_uri = "mongodb+srv://ghaithalrahi:Searchersof99!@deyski999.j1l0sp5.mongodb.net/?retryWrites=true&w=majority&appName=Deyski999"
+
