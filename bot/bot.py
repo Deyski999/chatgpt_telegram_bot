@@ -788,24 +788,27 @@ async def edited_message_handle(update: Update, context: CallbackContext):
 
 async def error_handle(update, context):
     try:
-        if update and hasattr(update, "effective_chat") and update.effective_chat:
-            await context.bot.send_message(update.effective_chat.id, "Something went wrong.")
-        else:
-            print("⚠️ No chat info available to send error message.")
-    except Exception as e:
-        print(f"❌ Error while handling error: {e}")
-
-    try:
-        # collect error message
+        # Build error message for logging
         tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
         tb_string = "".join(tb_list)
         update_str = update.to_dict() if isinstance(update, Update) else str(update)
+
         message = (
             f"An exception was raised while handling an update\n"
-            f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}"
-            "</pre>\n\n"
+            f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}</pre>\n\n"
             f"<pre>{html.escape(tb_string)}</pre>"
         )
+
+        # Only send to chat if update has a chat
+        if update and hasattr(update, "effective_chat") and update.effective_chat:
+            for message_chunk in split_message(message):
+                await context.bot.send_message(update.effective_chat.id, message_chunk, parse_mode=ParseMode.HTML)
+        else:
+            print("⚠️ No chat info available — cannot send error message.")
+
+    except Exception as e:
+        print(f"❌ Error while handling error: {e}")
+
 
         # split text into multiple messages due to 4096 character limit
         for message_chunk in split_text_into_chunks(message, 4096):
