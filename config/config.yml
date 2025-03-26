@@ -1,0 +1,4 @@
+telegram_token: ${TELEGRAM_TOKEN}
+openai_api_key: ${OPENAI_API_KEY}
+allowed_telegram_usernames:
+  - Deyski999
