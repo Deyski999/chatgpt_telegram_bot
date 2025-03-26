@@ -876,9 +876,18 @@ def run_bot() -> None:
 
     application.add_error_handler(error_handle)
 
-    # start the bot
-    application.run_polling()
+  # start the bot using webhook
+await application.bot.set_webhook("https://chatgpt-telegram-bot-vj8h.onrender.com/webhook")
 
+await application.run_webhook(
+    listen="0.0.0.0",
+    port=int(os.environ.get("PORT", 8443)),
+    webhook_path="/webhook",
+    webhook_url="https://chatgpt-telegram-bot-vj8h.onrender.com/webhook"
+)
+
+import asyncio
 
 if __name__ == "__main__":
-    run_bot()
+    asyncio.run(run_bot())
+
