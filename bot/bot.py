@@ -791,9 +791,9 @@ async def error_handle(update, context):
         if update and hasattr(update, "effective_chat") and update.effective_chat:
             await context.bot.send_message(update.effective_chat.id, "Something went wrong.")
         else:
-            print("Error occurred, but no valid chat to respond to.")
+            print("⚠️ No chat info available to send error message.")
     except Exception as e:
-        print(f"Error while handling error: {e}")
+        print(f"❌ Error while handling error: {e}")
 
     try:
         # collect error message
