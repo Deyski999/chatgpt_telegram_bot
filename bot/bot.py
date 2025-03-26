@@ -786,7 +786,7 @@ async def edited_message_handle(update: Update, context: CallbackContext):
         await update.edited_message.reply_text(text, parse_mode=ParseMode.HTML)
 
 
-async def error_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def error_handle(update, context):
     try:
         if update and update.effective_chat:
             await context.bot.send_message(update.effective_chat.id, "Something went wrong.")
